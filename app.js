@@ -43,11 +43,13 @@ app.post("/funkos", (req, res) => {
   res.status(201).json(newFunko);
 });
 
+//Update
 app.put("/funkos/:funkoId", (req, res) => {
   const { funkoId } = req.params;
   const foundFunko = funkos.find((funko) => funko.id === +funkoId);
   if (foundFunko) {
     for (const key in req.body) foundFunko[key] = req.body[key];
+    foundFunko.slug = slugify(req.body.name, { lower: true });
     res.status(204).end();
   } else {
     res.status(404).json({ message: "Funko not found" });

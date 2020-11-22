@@ -13,7 +13,7 @@ const funkos = [
     id: 2,
     name: "MONICA GELLER",
     slug: "monica-geller",
-    price: "14",
+    price: 14,
     description:
       "Limited Edition Monica with Turkey-Head Pop! Stickers on box may vary.",
     image:
