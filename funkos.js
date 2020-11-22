@@ -41,16 +41,6 @@ const funkos = [
     image:
       "https://media.entertainmentearth.com/assets/images/664a3c8764274eb683831422aac3f481xl.jpg",
   },
-  {
-    id: 5,
-    name: "HISOKA",
-    slug: "hisoka",
-    price: "6.5",
-    description:
-      "From Hunter x Hunter, Hisoka, as a stylized Pop.Stylized collectable stands 3 ¾ inches tall, perfect for any Hunter x Hunter fan.",
-    image:
-      "https://media.entertainmentearth.com/assets/images/664a3c8764274eb683831422aac3f481xl.jpg",
-  },
 ];
 
 module.exports = funkos;

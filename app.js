@@ -1,5 +1,5 @@
 const express = require("express");
-const funkos = require("./funkos");
+let funkos = require("./funkos");
 const cors = require("cors");
 
 const app = express();
@@ -12,8 +12,23 @@ app.get("/", (req, res) => {
 });
 
 app.get("/funkos", (req, res) => {
-  console.log("HELLO");
-  res.json(funkos);
+  try {
+    res.json(funkos);
+  } catch (error) {
+    console.error("FunkoStore -> fetchFunkos -> error", error);
+  }
+});
+
+app.delete("/funkos/:funkoId", (req, res) => {
+  const { funkoId } = req.params;
+  const foundFunko = funkos.find((funko) => funko.id === +funkoId);
+  if (foundFunko) {
+    funkos = funkos.filter((funko) => funko.id !== +funkoId);
+    res.status(204).end();
+    console.log("funkos", funkos);
+  } else {
+    res.status(404).json({ message: "Funko not found" });
+  }
 });
 
 app.listen(8000, () => {
