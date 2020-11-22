@@ -1,8 +1,11 @@
 const express = require("express");
-let funkos = require("./funkos");
 const cors = require("cors");
+const bodyParser = require("body-parser");
+const slugify = require("slugify");
+let funkos = require("./funkos");
 
 const app = express();
+app.use(bodyParser.json());
 app.use(cors());
 
 //Routes
@@ -26,6 +29,26 @@ app.delete("/funkos/:funkoId", (req, res) => {
     funkos = funkos.filter((funko) => funko.id !== +funkoId);
     res.status(204).end();
     console.log("funkos", funkos);
+  } else {
+    res.status(404).json({ message: "Funko not found" });
+  }
+});
+
+app.post("/funkos", (req, res) => {
+  const id = funkos[funkos.length - 1].id + 1;
+  const slug = slugify(req.body.name, { lower: true });
+
+  const newFunko = { id, slug, ...req.body };
+  funkos.push(newFunko);
+  res.status(201).json(newFunko);
+});
+
+app.put("/funkos/:funkoId", (req, res) => {
+  const { funkoId } = req.params;
+  const foundFunko = funkos.find((funko) => funko.id === +funkoId);
+  if (foundFunko) {
+    for (const key in req.body) foundFunko[key] = req.body[key];
+    res.status(204).end();
   } else {
     res.status(404).json({ message: "Funko not found" });
   }
