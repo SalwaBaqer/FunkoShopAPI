@@ -1,43 +1,58 @@
 const slugify = require("slugify");
 let funkos = require("../funkos");
+const { Funko } = require("../db/models");
 
-exports.funkoList = (req, res) => {
+//View List
+exports.funkoList = async (req, res) => {
   try {
+    const funkos = await Funko.findAll({
+      attributes: { exclude: ["createdAt", "updatedAt"] },
+    });
+    console.log("funkos", funkos);
     res.json(funkos);
   } catch (error) {
     console.error("FunkoStore -> fetchFunkos -> error", error);
   }
 };
 
-exports.funkoCreate = (req, res) => {
-  const id = funkos[funkos.length - 1].id + 1;
-  const slug = slugify(req.body.name, { lower: true });
-
-  const newFunko = { id, slug, ...req.body };
-  funkos.push(newFunko);
-  res.status(201).json(newFunko);
-};
-
-exports.funkoDelete = (req, res) => {
-  const { funkoId } = req.params;
-  const foundFunko = funkos.find((funko) => funko.id === +funkoId);
-  if (foundFunko) {
-    funkos = funkos.filter((funko) => funko.id !== +funkoId);
-    res.status(204).end();
-    console.log("funkos", funkos);
-  } else {
-    res.status(404).json({ message: "Funko not found" });
+//Add new Funko
+exports.funkoCreate = async (req, res) => {
+  try {
+    const newFunko = await Funko.create(req.body);
+    res.status(201).json(newFunko);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };
 
-exports.funkoUpdate = (req, res) => {
+//Delete a funko
+exports.funkoDelete = async (req, res) => {
   const { funkoId } = req.params;
-  const foundFunko = funkos.find((funko) => funko.id === +funkoId);
-  if (foundFunko) {
-    for (const key in req.body) foundFunko[key] = req.body[key];
-    foundFunko.slug = slugify(req.body.name, { lower: true });
-    res.status(204).end();
-  } else {
-    res.status(404).json({ message: "Funko not found" });
+  try {
+    const foundFunko = await Funko.findByPk(funkoId);
+    if (foundFunko) {
+      await foundFunko.destroy();
+      res.status(204).end();
+    } else {
+      res.status(404).json({ message: "Funko not found" });
+    }
+  } catch (err) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+//Update a Funko
+exports.funkoUpdate = async (req, res) => {
+  const { funkoId } = req.params;
+  try {
+    const foundFunko = await Funko.findByPk(funkoId);
+    if (foundFunko) {
+      await foundFunko.update(req.body);
+      res.status(204).end();
+    } else {
+      res.status(404).json({ message: "Funko not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };
