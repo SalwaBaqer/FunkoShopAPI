@@ -5,9 +5,22 @@ const funkoRoutes = require("./routes/funkos");
 const db = require("./db/models");
 
 const app = express();
+
+//middleware
 app.use(bodyParser.json());
 app.use(cors());
+//routes
 app.use("/funkos", funkoRoutes);
+
+//path not found
+app.use((req, res) => {
+  res.status(404).json({ message: "PATH NOT FOUND" });
+});
+
+app.use((err, req, res, next) => {
+  res.status(err.status ?? 500);
+  res.json({ message: err.message ?? "Internal Server Error" });
+});
 
 const run = async () => {
   try {

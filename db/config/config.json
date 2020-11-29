@@ -1,7 +1,7 @@
 {
   "development": {
-    "username": "postgres",
-    "password": "Mas?55543231",
+    "username": "user",
+    "password": null,
     "database": "funkoshop_db",
     "host": "127.0.0.1",
     "dialect": "postgres"

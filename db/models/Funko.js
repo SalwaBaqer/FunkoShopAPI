@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     price: {
-      type: DataTypes.NUMBER,
+      type: DataTypes.FLOAT,
       allowNull: false,
       defaultValue: 6.5,
       validate: {
@@ -27,7 +27,6 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
   });
-
   SequelizeSlugify.slugifyModel(Funko, { source: ["name"] });
   return Funko;
 };

@@ -1,9 +1,16 @@
-const slugify = require("slugify");
-let funkos = require("../funkos");
 const { Funko } = require("../db/models");
 
+exports.fetchFunko = async (funkoId, next) => {
+  try {
+    const foundFunko = await Funko.findByPk(funkoId);
+    return foundFunko;
+  } catch (error) {
+    next(error);
+  }
+};
+
 //View List
-exports.funkoList = async (req, res) => {
+exports.funkoList = async (req, res, next) => {
   try {
     const funkos = await Funko.findAll({
       attributes: { exclude: ["createdAt", "updatedAt"] },
@@ -11,48 +18,36 @@ exports.funkoList = async (req, res) => {
     console.log("funkos", funkos);
     res.json(funkos);
   } catch (error) {
-    console.error("FunkoStore -> fetchFunkos -> error", error);
+    next(error);
   }
 };
 
 //Add new Funko
-exports.funkoCreate = async (req, res) => {
+exports.funkoCreate = async (req, res, next) => {
   try {
     const newFunko = await Funko.create(req.body);
     res.status(201).json(newFunko);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    next(error);
   }
 };
 
 //Delete a funko
-exports.funkoDelete = async (req, res) => {
-  const { funkoId } = req.params;
+exports.funkoDelete = async (req, res, next) => {
   try {
-    const foundFunko = await Funko.findByPk(funkoId);
-    if (foundFunko) {
-      await foundFunko.destroy();
-      res.status(204).end();
-    } else {
-      res.status(404).json({ message: "Funko not found" });
-    }
+    await req.funko.destroy();
+    res.status(204).end();
   } catch (err) {
-    res.status(500).json({ message: error.message });
+    next(error);
   }
 };
 
 //Update a Funko
-exports.funkoUpdate = async (req, res) => {
-  const { funkoId } = req.params;
+exports.funkoUpdate = async (req, res, next) => {
   try {
-    const foundFunko = await Funko.findByPk(funkoId);
-    if (foundFunko) {
-      await foundFunko.update(req.body);
-      res.status(204).end();
-    } else {
-      res.status(404).json({ message: "Funko not found" });
-    }
+    await req.funko.update(req.body);
+    res.status(204).end();
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    next(error);
   }
 };
