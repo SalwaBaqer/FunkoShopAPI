@@ -25,6 +25,9 @@ exports.funkoList = async (req, res, next) => {
 //Add new Funko
 exports.funkoCreate = async (req, res, next) => {
   try {
+    if (req.file) {
+      req.body.image = `http://${req.get("host")}/media/${req.file.filename}`;
+    }
     const newFunko = await Funko.create(req.body);
     res.status(201).json(newFunko);
   } catch (error) {
@@ -45,6 +48,10 @@ exports.funkoDelete = async (req, res, next) => {
 //Update a Funko
 exports.funkoUpdate = async (req, res, next) => {
   try {
+    if (req.file) {
+      req.body.image = `http://${req.get("host")}/media/${req.file.filename}`;
+      await req.funko.update(req.file.filename);
+    }
     await req.funko.update(req.body);
     res.status(204).end();
   } catch (error) {

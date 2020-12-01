@@ -8,6 +8,18 @@ const {
   funkoUpdate,
   fetchFunko,
 } = require("../controllers/funkoController");
+const multer = require("multer");
+
+const storage = multer.diskStorage({
+  destination: "./media",
+  filename: (req, file, cb) => {
+    cb(null, `${+new Date()} ${file.originalname}`);
+  },
+});
+
+const upload = multer({
+  storage,
+});
 
 router.param("funkoId", async (req, res, next, funkoIdVariable) => {
   const funko = await fetchFunko(funkoIdVariable, next);
@@ -27,12 +39,12 @@ router.param("funkoId", async (req, res, next, funkoIdVariable) => {
 router.get("/", funkoList);
 
 //create
-router.post("/", funkoCreate);
+router.post("/", upload.single("image"), funkoCreate);
 
 //delete
 router.delete("/:funkoId", funkoDelete);
 
 //Update
-router.put("/:funkoId", funkoUpdate);
+router.put("/:funkoId", upload.single("image"), funkoUpdate);
 
 module.exports = router;
