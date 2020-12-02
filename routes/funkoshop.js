@@ -4,6 +4,7 @@ const router = express.Router();
 const {
   funkoShopList,
   funkoShopCreate,
+  funkoCreate,
 } = require("../controllers/funkoShopController");
 const multer = require("multer");
 
@@ -23,5 +24,8 @@ router.get("/", funkoShopList);
 
 //create
 router.post("/", upload.single("image"), funkoShopCreate);
+
+//create
+router.post("/:shopsId/funkos", upload.single("image"), funkoCreate);
 
 module.exports = router;

@@ -3,7 +3,6 @@ const router = express.Router();
 
 const {
   funkoList,
-  funkoCreate,
   funkoDelete,
   funkoUpdate,
   fetchFunko,
@@ -37,9 +36,6 @@ router.param("funkoId", async (req, res, next, funkoIdVariable) => {
 
 //List
 router.get("/", funkoList);
-
-//create
-router.post("/", upload.single("image"), funkoCreate);
 
 //delete
 router.delete("/:funkoId", funkoDelete);
