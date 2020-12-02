@@ -15,7 +15,7 @@ app.use(cors());
 const mediaPath = path.join(__dirname, "media");
 
 //routes
-app.use("/funkoshop", funkoShopRoutes);
+app.use("/shops", funkoShopRoutes);
 app.use("/funkos", funkoRoutes);
 app.use("/media", express.static(mediaPath));
 
