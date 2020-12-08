@@ -1,17 +1,30 @@
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+//routes
 const funkoRoutes = require("./routes/funkos");
 const funkoShopRoutes = require("./routes/funkoshop");
 const userRoutes = require("./routes/users");
+
+// Passport Strategies
+const { localStrategy } = require("./middleware/passport");
+
+//db
 const db = require("./db/models");
+
+//path
 const path = require("path");
 
+const passport = require("passport");
+
+//app
 const app = express();
 
 //middleware
 app.use(bodyParser.json());
 app.use(cors());
+app.use(passport.initialize());
+passport.use(localStrategy);
 
 const mediaPath = path.join(__dirname, "media");
 
@@ -19,6 +32,7 @@ const mediaPath = path.join(__dirname, "media");
 app.use("/shops", funkoShopRoutes);
 app.use("/funkos", funkoRoutes);
 app.use("/media", express.static(mediaPath));
+app.use(passport.initialize());
 app.use(userRoutes);
 
 //path not found
@@ -34,7 +48,7 @@ app.use((err, req, res, next) => {
 
 const run = async () => {
   try {
-    await db.sequelize.sync({ force: true });
+    await db.sequelize.sync({ alter: true });
     console.log("Connection to the database successful!");
     await app.listen(8000, () => {
       console.log("The application is running on localhost:8000");
