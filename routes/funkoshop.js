@@ -7,6 +7,7 @@ const {
   funkoCreate,
 } = require("../controllers/funkoShopController");
 const multer = require("multer");
+const passport = require("passport");
 
 const storage = multer.diskStorage({
   destination: "./media",
@@ -23,9 +24,20 @@ const upload = multer({
 router.get("/", funkoShopList);
 
 //create
-router.post("/", upload.single("image"), funkoShopCreate);
+router.post(
+  "/",
+
+  passport.authenticate("jwt", { session: false }),
+  upload.single("image"),
+  funkoShopCreate
+);
 
 //create
-router.post("/:shopsId/funkos", upload.single("image"), funkoCreate);
+router.post(
+  "/:shopsId/funkos",
+  passport.authenticate("jwt", { session: false }),
+  upload.single("image"),
+  funkoCreate
+);
 
 module.exports = router;

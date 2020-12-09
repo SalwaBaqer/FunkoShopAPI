@@ -7,7 +7,7 @@ const funkoShopRoutes = require("./routes/funkoshop");
 const userRoutes = require("./routes/users");
 
 // Passport Strategies
-const { localStrategy } = require("./middleware/passport");
+const { localStrategy, jwtStrategy } = require("./middleware/passport");
 
 //db
 const db = require("./db/models");
@@ -25,6 +25,7 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use(passport.initialize());
 passport.use(localStrategy);
+passport.use(jwtStrategy);
 
 const mediaPath = path.join(__dirname, "media");
 
