@@ -55,4 +55,16 @@ db.Funko.belongsTo(db.FunkoShop, {
   foreignKey: { fieldName: "funkoShopId" },
 });
 
+db.User.hasMany(db.Order, { as: "orders", foreignKey: "userId" });
+db.FunkoShop.belongsTo(db.User, { as: "user" });
+
+db.Order.belongsToMany(db.Funko, {
+  through: db.OrderItem,
+  foreignKey: "orderId",
+});
+db.Funko.belongsToMany(db.Order, {
+  through: db.OrderItem,
+  foreignKey: "funkoId",
+});
+
 module.exports = db;

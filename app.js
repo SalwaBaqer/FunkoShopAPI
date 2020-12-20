@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const funkoRoutes = require("./routes/funkos");
 const funkoShopRoutes = require("./routes/funkoshop");
 const userRoutes = require("./routes/users");
+const orderRoutes = require("./routes/orders");
 
 // Passport Strategies
 const { localStrategy, jwtStrategy } = require("./middleware/passport");
@@ -35,6 +36,7 @@ app.use("/funkos", funkoRoutes);
 app.use("/media", express.static(mediaPath));
 app.use(passport.initialize());
 app.use(userRoutes);
+app.use(orderRoutes);
 
 //path not found
 app.use((req, res) => {
